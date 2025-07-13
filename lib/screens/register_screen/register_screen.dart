@@ -118,10 +118,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final result = await authController.register(
           emailController.text, psswdController.text);
-      _showSnackbar('Sukses daftar sebagai ${result.user?.email}');
+      _showSnackbar('Sukses daftar sebagai ${result.user?.email}. Silakan login untuk melanjutkan.');
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, NavigationRoutes.home.name);
+        // Logout user setelah registrasi agar harus login manual
+        await authController.signOut();
+        Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
       _showSnackbar('Daftar gagal: ${e.message}');
